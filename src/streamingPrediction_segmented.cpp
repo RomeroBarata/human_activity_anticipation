@@ -120,7 +120,7 @@ void readLabelFile() {
     while (getline(file, line)) {
         stringstream lineStream(line);
         string element1, element2;
-        parseChk(getline(lineStream, element1, ','));
+        parseChk((bool)getline(lineStream, element1, ','));
 
         if (element1.compare("END") == 0) {
             break;
@@ -131,11 +131,11 @@ void readLabelFile() {
         } else{
         	SegCount[element1] += 1;
         }
-        parseChk(getline(lineStream, element2, ',')); // get start frame
+        parseChk((bool)getline(lineStream, element2, ',')); // get start frame
 		int startF = atoi(element2.c_str());
-		parseChk(getline(lineStream, element2, ',')); // get end frame
+		parseChk((bool)getline(lineStream, element2, ',')); // get end frame
 		int endF = atoi(element2.c_str());
-        parseChk(getline(lineStream, element2, ',')); // get activity
+        parseChk((bool)getline(lineStream, element2, ',')); // get activity
         ActLabelMap[element1][SegCount[element1]] = element2.c_str();
         int objId = 1;
         while (getline(lineStream, element2, ',')) {
@@ -164,7 +164,7 @@ void readSegmentsFile() {
 	while (getline(file, line)) {
 		stringstream lineStream(line);
 		string element1, element2;
-		parseChk(getline(lineStream, element1, ';'));
+		parseChk((bool)getline(lineStream, element1, ';'));
 
 		if (element1.compare("END") == 0) {
 			break;
@@ -245,18 +245,18 @@ void readDataActMap(string actfile) {
 	while (getline(file, line)) {
 		stringstream lineStream(line);
 		string element1, element2, element3;
-		parseChk(getline(lineStream, element1, ','));
+		parseChk((bool)getline(lineStream, element1, ','));
 
 		if (element1.compare("END") == 0) {
 			break;
 		}
-		parseChk(getline(lineStream, element2, ','));
+		parseChk((bool)getline(lineStream, element2, ','));
 		if (element1.length() != 10) {
 			errorMsg("Data Act Map file format mismatch..");
 		}
 
 		data_act_map[element1] = element2;
-		parseChk(getline(lineStream, element3, ',')); // get actor
+		parseChk((bool)getline(lineStream, element3, ',')); // get actor
 		while (getline(lineStream, element3, ',')) {
                         cout << element3 << endl;
 			//vector<string> fields;
@@ -649,8 +649,8 @@ int main(int argc, char** argv) {
 
 
 		svm_classifier_init(14 , &args[0]);
-		svm_classifier( 14 , &args[0] );
-		interpretPrediction("pred_"+all_files[i]+".txt", all_files[i], true);
+		//svm_classifier( 14 , &args[0] );
+		//interpretPrediction("pred_"+all_files[i]+".txt", all_files[i], true);
 			// compute segment features
 			// get the labeling
 		//map< int, vector<hallucination> > allHal;
@@ -659,6 +659,7 @@ int main(int argc, char** argv) {
 			segCount ++;
 			STEPSIZE = SegmentFrameCount[all_files[i]][segCount];
 			map< int,vector < hallucination > > hallucinations;
+            /*
 			if(hallucinate){
 				// generate affordance maps and sample end points
 
@@ -681,7 +682,7 @@ int main(int argc, char** argv) {
 		            //}
 				}
 
-			}
+			}*/
 
 			// obtain the next set of frames
 
@@ -691,10 +692,11 @@ int main(int argc, char** argv) {
 			}
 			cout << "segment length of segment " << segCount << " is " << STEPSIZE << endl;
 			//vector<Frame> segment;
+            /*
 			set<int> intermediateframes;
 			for(int index =1; index<10; index++ ){
 				intermediateframes.insert(int(index*0.1*STEPSIZE));
-			}
+			}*/
 			int updateCounter =0;
 			for (int numf = 0; numf < STEPSIZE; numf++) {
 				// if status +1 is labeled then read frame else skip frame
@@ -722,6 +724,7 @@ int main(int argc, char** argv) {
 							<< endl;
 					break;
 				}
+                /*
 				if(intermediateframes.find(numf)!=intermediateframes.end()){
 					// update hallucinations
 					updateCounter++;
@@ -747,18 +750,18 @@ int main(int argc, char** argv) {
 					}
 
 
-				}
+				}*/
 			}
-			writeGTtrajectories(activityFrames,STEPSIZE,count);
-
-			// compute the labels for the activity so far
-			cout << "calling the classifier here" << endl;
-			svm_classifier( 14 , &args[0] );
-			// output prediction
-			interpretPrediction("pred_"+all_files[i]+".txt",all_files[i],true);
-
-			hallucinations.clear();
 		}
+		writeGTtrajectories(activityFrames,STEPSIZE,count);
+
+		// compute the labels for the activity so far
+		cout << "calling the classifier here" << endl;
+		svm_classifier( 14 , &args[0] );
+		// output prediction
+		interpretPrediction("pred_"+all_files[i]+".txt",all_files[i],true);
+
+		//hallucinations.clear();
 
 	}
 	// fclose(pRecFile);

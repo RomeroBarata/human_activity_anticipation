@@ -94,7 +94,7 @@ private:
             stringstream lineStream(line);
             string element;
 
-            parseChk(getline(lineStream, element, ','), true);
+            parseChk((bool)getline(lineStream, element, ','), true);
             currentFrameNum = atoi((char*) element.c_str());
             //cout << "skipping frame " << currentFrameNum << " from skeleton data" << endl;
             if (element.compare("END") == 0) {
@@ -120,7 +120,7 @@ private:
                 stringstream lineStream(line);
                 string element;
 
-                parseChk(getline(lineStream, element, ','), true);
+                parseChk((bool)getline(lineStream, element, ','), true);
                 currentFrameNum = atoi((char*) element.c_str());
                 //cout << "skipping frame " << currentFrameNum << " from skeleton data" << endl;
                 if (element.compare("END") == 0) {
@@ -141,7 +141,7 @@ private:
             int pos_jointCount = 0;
             int pos_joint_dataCount = 0;
 
-            parseChk(getline(lineStream, element, ','), true);
+            parseChk((bool)getline(lineStream, element, ','), true);
             currentFrameNum = atoi((char*) element.c_str());
 
             if (element.compare("END") == 0) {
@@ -157,10 +157,10 @@ private:
                     joint_dataCount++;
 
                     if (joint_dataCount == JOINT_DATA_ORI_NUM) {
-                        parseChk(getline(lineStream, element, ','), true); // ori conf value
+                        parseChk((bool)getline(lineStream, element, ','), true); // ori conf value
                         data_CONF[jointCount][0] = atoi((char*) element.c_str());
                     } else if (joint_dataCount >= JOINT_DATA_NUM) {
-                        parseChk(getline(lineStream, element, ','), true); // pos conf value
+                        parseChk((bool)getline(lineStream, element, ','), true); // pos conf value
                         data_CONF[jointCount][1] = atoi((char*) element.c_str());
                         jointCount++;
                         joint_dataCount = 0;
@@ -174,7 +174,7 @@ private:
                     pos_data[pos_jointCount][pos_joint_dataCount] = e;
                     pos_joint_dataCount++;
                     if (pos_joint_dataCount >= POS_JOINT_DATA_NUM) {
-                        parseChk(getline(lineStream, element, ','), true); // pos conf value
+                        parseChk((bool)getline(lineStream, element, ','), true); // pos conf value
                         data_pos_CONF[pos_jointCount] = atoi((char*) element.c_str());
 
                         pos_jointCount++;

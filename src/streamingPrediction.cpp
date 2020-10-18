@@ -121,7 +121,7 @@ void readLabelFile() {
     while (getline(file, line)) {
         stringstream lineStream(line);
         string element1, element2;
-        parseChk(getline(lineStream, element1, ','));
+        parseChk((bool)getline(lineStream, element1, ','));
 
         if (element1.compare("END") == 0) {
             break;
@@ -132,11 +132,11 @@ void readLabelFile() {
         } else{
         	SegCount[element1] += 1;
         }
-        parseChk(getline(lineStream, element2, ',')); // get start frame
+        parseChk((bool)getline(lineStream, element2, ',')); // get start frame
 		int startF = atoi(element2.c_str());
-		parseChk(getline(lineStream, element2, ',')); // get end frame
+		parseChk((bool)getline(lineStream, element2, ',')); // get end frame
 		int endF = atoi(element2.c_str());
-        parseChk(getline(lineStream, element2, ',')); // get activity
+        parseChk((bool)getline(lineStream, element2, ',')); // get activity
         ActLabelMap[element1][SegCount[element1]] = element2.c_str();
         int objId = 1;
         while (getline(lineStream, element2, ',')) {
@@ -165,7 +165,7 @@ void readSegmentsFile() {
 	while (getline(file, line)) {
 		stringstream lineStream(line);
 		string element1, element2;
-		parseChk(getline(lineStream, element1, ';'));
+		parseChk((bool)getline(lineStream, element1, ';'));
 
 		if (element1.compare("END") == 0) {
 			break;
@@ -246,18 +246,18 @@ void readDataActMap(string actfile) {
 	while (getline(file, line)) {
 		stringstream lineStream(line);
 		string element1, element2, element3;
-		parseChk(getline(lineStream, element1, ','));
+		parseChk((bool)getline(lineStream, element1, ','));
 
 		if (element1.compare("END") == 0) {
 			break;
 		}
-		parseChk(getline(lineStream, element2, ','));
+		parseChk((bool)getline(lineStream, element2, ','));
 		if (element1.length() != 10) {
 			errorMsg("Data Act Map file format mismatch..");
 		}
 
 		data_act_map[element1] = element2;
-		parseChk(getline(lineStream, element3, ',')); // get actor
+		parseChk((bool)getline(lineStream, element3, ',')); // get actor
 		while (getline(lineStream, element3, ',')) {
                         cout << element3 << endl;
 			//vector<string> fields;

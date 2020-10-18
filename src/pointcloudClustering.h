@@ -25,6 +25,13 @@
 #include "includes/CombineUtils.h"
 #include "includes/CovarianceMatrix.h"
 
+// My modifications
+#include "pcl/impl/pcl_base.hpp"
+#include "pcl/kdtree/impl/kdtree_flann.hpp"
+#include "pcl/search/impl/kdtree.hpp"
+#include "pcl/search/impl/organized.hpp"
+#include "pcl/features/impl/normal_3d.hpp"
+
 //#include <sensor_msgs/point_cloud_conversion.h>
 //#include <point_cloud_mapping/geometry/nearest.h>
 

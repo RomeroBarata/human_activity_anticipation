@@ -1158,12 +1158,12 @@ def getObjSegmentFeatures(aid,objId,startFrame,endFrame):
     else:
     #print 'obj feats:',len(Features[0][aid][objId]),len(IntegralFeatures[0][aid][objId])
         obj_add_feats = (IntegralFeatures[0][aid][objId][endFrame-1] - IntegralFeatures[0][aid][objId][startFrame-1])*1/segLen
-    feats =  concatenate((obj_sel_feats,obj_add_feats),1)
+    feats =  concatenate((obj_sel_feats,obj_add_feats),-1)
     if(NON_ADDITIVE == "true"):
         #print shape(Features[0][aid][objId][startFrame+int((endFrame-startFrame)/2)])
         dist =  array([math.pow(obj_add_feats[0],2) + math.pow(obj_add_feats[1],2)+ math.pow(obj_add_feats[2],2)])
         dist = dist*segLen
-        feats = concatenate((feats,dist),1)
+        feats = concatenate((feats,dist),-1)
     return feats
 
 
@@ -1180,7 +1180,7 @@ def getSkelSegmentFeatures(aid,startFrame,endFrame):
         print "seglen", endFrame,startFrame, segLen
         print len(IntegralFeatures[1][aid])
         skel_add_feats = (IntegralFeatures[1][aid][endFrame-1] - IntegralFeatures[1][aid][startFrame-1])*1/segLen
-    feats = concatenate((skel_sel_feats,skel_add_feats),1)
+    feats = concatenate((skel_sel_feats,skel_add_feats),-1)
     #print shape(skel_add_feats)
     if(NON_ADDITIVE == "true"):
         #print shape(Features[0][aid][objId][startFrame+int((endFrame-startFrame)/2)])
@@ -1198,7 +1198,7 @@ def getSkelSegmentFeatures(aid,startFrame,endFrame):
             dist[7] = array([math.pow(skel_add_feats[28],2) + math.pow(skel_add_feats[29],2)+ math.pow(skel_add_feats[30],2)])
         #print dist
         dist = dist*segLen
-        feats = concatenate((feats,dist),1)
+        feats = concatenate((feats,dist),-1)
     return feats
 
 def getObjObjSegmentFeatures(aid,objId1,objId2,startFrame,endFrame):
@@ -1212,16 +1212,16 @@ def getObjObjSegmentFeatures(aid,objId1,objId2,startFrame,endFrame):
     obj_obj_sel_feats_s = Features[5][aid][objId1][objId2][startFrame]
     obj_obj_sel_feats_e = Features[5][aid][objId1][objId2][endFrame]
     obj_obj_sel_feats_m = Features[5][aid][objId1][objId2][midFrame]
-    t =  concatenate((obj_obj_sel_feats_m,obj_obj_sel_feats_e),1)
-    t = concatenate((obj_obj_sel_feats_s,t),1)
+    t =  concatenate((obj_obj_sel_feats_m,obj_obj_sel_feats_e),-1)
+    t = concatenate((obj_obj_sel_feats_s,t),-1)
     if NON_ADDITIVE == "true":
         feats = array(Features[5][aid][objId1][objId2][startFrame:endFrame+1])
         max_feats = feats.max(0)
         max_feats = max_feats*(1/segLen)
         min_feats = feats.min(0)
         min_feats = min_feats*(1/segLen)
-        t = concatenate((t,min_feats),1)
-        t = concatenate((t,max_feats),1)
+        t = concatenate((t,min_feats),-1)
+        t = concatenate((t,max_feats),-1)
         
     return t
     #return array([1])
@@ -1239,8 +1239,8 @@ def getSkelObjSegmentFeatures(aid,objId,startFrame,endFrame):
     skel_obj_sel_feats_s = Features[4][aid][objId][startFrame]
     skel_obj_sel_feats_e = Features[4][aid][objId][endFrame]
     skel_obj_sel_feats_m = Features[4][aid][objId][midFrame]
-    t =  concatenate((skel_obj_sel_feats_m,skel_obj_sel_feats_e),1)
-    t = concatenate((skel_obj_sel_feats_s,t),1)
+    t =  concatenate((skel_obj_sel_feats_m,skel_obj_sel_feats_e),-1)
+    t = concatenate((skel_obj_sel_feats_s,t),-1)
     if NON_ADDITIVE == "true":
         print startFrame,endFrame
         feats = array(Features[4][aid][objId][startFrame:endFrame+1])
@@ -1248,8 +1248,8 @@ def getSkelObjSegmentFeatures(aid,objId,startFrame,endFrame):
         max_feats = max_feats*(1/segLen)
         min_feats = feats.min(0)
         min_feats = min_feats*(1/segLen)
-        t = concatenate((t,min_feats),1)
-        t = concatenate((t,max_feats),1)
+        t = concatenate((t,min_feats),-1)
+        t = concatenate((t,max_feats),-1)
         
     return t
     #return array([1])
@@ -1292,7 +1292,7 @@ def getSkelTemporalFeatures(aid, sf, mf, ef):
       if PARTIAL != "true":
           dist[7] = array([math.pow(skel_add_feats[28],2) + math.pow(skel_add_feats[29],2)+ math.pow(skel_add_feats[30],2)])
       tmp = dist/(m2-m1)
-      return concatenate((dist,tmp),1)
+      return concatenate((dist,tmp),-1)
 
     else :
       if PARTIAL == "true":
@@ -1315,13 +1315,13 @@ def getObjTemporalFeatures(aid, objId, sf,mf ,ef):
       feat_list=[2]
       obj_feats = IntegralFeatures[0][aid][objId][m2-1][ix_(feat_list)] - IntegralFeatures[0][aid][objId][m1-1][ix_(feat_list)]
       tmp = obj_feats/(m2-m1)
-      obj_feats = concatenate((obj_feats,tmp),1)
+      obj_feats = concatenate((obj_feats,tmp),-1)
       obj_add_feats = IntegralFeatures[0][aid][objId][m2-1] - IntegralFeatures[0][aid][objId][m1-1]
       #print shape(Features[0][aid][objId][startFrame+int((endFrame-startFrame)/2)])
       dist =  array([math.pow(obj_add_feats[0],2) + math.pow(obj_add_feats[1],2)+ math.pow(obj_add_feats[2],2)])
       dist_norm = dist/(m2-m1)
-      dist = concatenate((dist,dist_norm),1)
-      return concatenate((obj_feats,dist),1)
+      dist = concatenate((dist,dist_norm),-1)
+      return concatenate((obj_feats,dist),-1)
     else:
       feat_list=[2,3]
       obj_feats = IntegralFeatures[0][aid][objId][m2-1][ix_(feat_list)] - IntegralFeatures[0][aid][objId][m1-1][ix_(feat_list)]
@@ -4111,8 +4111,8 @@ def print_testing_stats_objects( K, teststats):
     truecount = zeros((K,1))
     predcount = zeros((K,1))
     singlepredcount = zeros((K,1))
-    aggConfusionMatrix=zeros((K,K),dtype='i')
-    aggConfusionMatrixWMultiple=zeros((K,K),dtype='i')
+    aggConfusionMatrix=zeros((K,K))
+    aggConfusionMatrixWMultiple=zeros((K,K))
     aggZeroPreds=zeros((K,1))
     aggMultiplePreds=zeros((K,1))
     for t in teststats:
